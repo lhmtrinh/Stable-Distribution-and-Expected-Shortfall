@@ -2,7 +2,7 @@ function [ES, VaR] = asymstabES(xi,a,b,scale,mu)
     % Get q , the quantile from the S(0 ,1) distribution
 
     opt=optimset('Display','off','TolX',1e-12) ;
-    diff = @(x)stabcdfroot(x,xi,a,b,scale,mu);
+    diff = @(x)stabcdfroot(x,xi,a,b);
     q=fzero(diff,-6,opt); 
     VaR=mu+scale*q;
 
@@ -15,8 +15,8 @@ function [ES, VaR] = asymstabES(xi,a,b,scale,mu)
 end
 
 
-function diff = stabcdfroot (x, xi , a, b,scale,mu)
-    [~ , F] = asymstab(x, a, b,scale,mu);
+function diff = stabcdfroot (x, xi ,a, b)
+    [~ , F] = asymstab(x, a, b);
     diff = F - xi ;
 end
 
@@ -39,3 +39,29 @@ function I = stoyint ( t , cut , a, t0bar)
     term = -(abs(cut) ^(a / (a - 1)) ) ;
     I=g.*exp( term.* v ) ;
 end
+
+% function [f,F] = asymstab1(xvec,a,b)
+%     bordertol=1e-8; lo=bordertol; hi=1-bordertol; tol=1e-7;
+%     xl=length(xvec); F=zeros(xl,1); f=F;
+%     for loop=1:length(xvec)
+%     x=xvec(loop); dopdf=1;
+%     f(loop)= quadl(@fff,lo,hi,tol,[],x,a,b,1) / pi;
+%     if nargout>1
+%         F(loop)=0.5-(1/pi)* quadl(@fff,lo,hi,tol,[],x,a,b,0);
+%     end
+%     end
+% end
+% 
+% function I=fff(uvec,x,a,b,dopdf)
+%     for ii=1:length(uvec)
+%     u=uvec(ii); t = (1-u)/u;
+%     if a==1
+%     cf = exp( -abs(t)*( 1 + i*b*(2/pi)*sign(t) * log(t) ) );
+%     else
+%     cf = exp( - ((abs(t))^a) *( 1 - i*b*sign(t) * tan(pi*a/2) ) );
+%     end
+%     z = exp(-i*t*x) .* cf;
+%     if dopdf==1, g=real(z); else g=imag(z)./t; end
+%     I(ii) = g / u^2;
+%     end
+% end

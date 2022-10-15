@@ -1,7 +1,12 @@
 function [f,F] = asymstab (xvec,a,b,c,d)
     % Calculate the pdf and cdf of a asymetric stable distribution
     % alpha = a, beta = b
-
+    
+    if nargin<4
+        c=1;
+        d=0;
+    end
+    
     bordertol = 1e-8; 
     lo= bordertol; 
     hi= 1-bordertol ; 
@@ -11,8 +16,9 @@ function [f,F] = asymstab (xvec,a,b,c,d)
     for loop=1:length(xvec)
         x=xvec(loop); 
         fun_pdf = @(u)fff(u,x,a,b,c,d,1);
-        f(loop) = integral(fun_pdf,lo,hi,'RelTol',0,'AbsTol',1e-12)/pi ;
         fun_cdf = @(u)fff(u,x,a,b,c,d,0);
+        f(loop) = integral(fun_pdf,lo,hi,'RelTol',0,'AbsTol',1e-12)/pi ;
+        
         F(loop) = 0.5 -(1/pi) * integral(fun_cdf,lo,hi,'RelTol',0,'AbsTol',1e-12);
     end
 end
