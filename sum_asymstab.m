@@ -1,17 +1,20 @@
-function f = sum_asymstab(xvec,a1,b1,c1,d1,a2,b2,c2,d2)
-    tol= 1e-7; 
+function [f,F] = sum_asymstab(xvec,a1,b1,c1,d1,a2,b2,c2,d2)
     xl=length(xvec);
     f = zeros(size(xvec));
+    F=zeros(xl,1) ; 
     bordertol = 1e-8; 
     lo= bordertol; 
     hi= 1-bordertol ; 
     for loop = 1 :xl
         x=xvec(loop);
-        f(loop) = quadl(@fff,lo,hi,tol,[],x,a1,b1,c1,d1,a2,b2,c2,d2)/pi;
+        fun_pdf = @(u)fff(u,x,a1,b1,c1,d1,a2,b2,c2,d2,1);
+        f(loop) = integral(fun_pdf,lo,hi)/pi;
+        fun_cdf = @(u)fff(u,x,a1,b1,c1,d1,a2,b2,c2,d2,0);
+        F(loop) = 0.5 -(1/pi) * integral(fun_cdf,lo,hi);
     end
 end
 
-function I = fff(uvec,x,a1,b1,c1,d1,a2,b2,c2,d2)
+function I = fff(uvec,x,a1,b1,c1,d1,a2,b2,c2,d2,dopdf)
     I = zeros(size(uvec));
     for ii =1:length(uvec)
         u=uvec(ii);
@@ -27,7 +30,11 @@ function I = fff(uvec,x,a1,b1,c1,d1,a2,b2,c2,d2)
             cf2 = exp( -((abs( t ) )^a2)*c2^a2 * ( 1 - 1i*b2*sign(t)*tan(pi*a2/2)) +1i*d2*t);
         end
         z = exp(-1i*t*x)*cf1*cf2 ; 
-        g = real(z) ; 
+        if dopdf==1
+            g = real(z); 
+        else 
+            g=imag(z)./t;
+        end
         I(ii)=g*u^(-2); 
     end
 end
