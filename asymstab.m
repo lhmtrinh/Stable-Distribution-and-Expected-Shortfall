@@ -11,9 +11,9 @@ function [f,F] = asymstab (xvec,a,b,c,d)
     for loop=1:length(xvec)
         x=xvec(loop); 
         fun_pdf = @(u)fff(u,x,a,b,c,d,1);
-        f(loop) = integral(fun_pdf,lo,hi)/pi ;
+        f(loop) = integral(fun_pdf,lo,hi,'RelTol',0,'AbsTol',1e-12)/pi ;
         fun_cdf = @(u)fff(u,x,a,b,c,d,0);
-        F(loop) = 0.5 -(1/pi) * integral(fun_cdf,lo,hi);
+        F(loop) = 0.5 -(1/pi) * integral(fun_cdf,lo,hi,'RelTol',0,'AbsTol',1e-12);
     end
 end
 
