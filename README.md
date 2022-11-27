@@ -1,2 +1,5 @@
 # Stable-dist-and-ES
-Stable distributions, sum of them and calculate exspected shortfall
+Experiment with Stable distribution. In particular:
+- Simulate
+- Sum of Stable distribution using convolution, simulation, and stoyanov's method
+- Calulate Expected shortfall for given alpha quantile
